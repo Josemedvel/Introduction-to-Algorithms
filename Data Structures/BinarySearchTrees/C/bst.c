@@ -14,40 +14,84 @@ Node* createNode(int num){
     newNode->right = NULL;
     return newNode;
 }
-
+Node* search(Node* root, int num){
+    if(root == NULL){
+        return NULL;
+    }
+    if(num < root->val){
+        return search(root->left, num);
+    }else if(num > root->val){
+        return search(root->right, num);
+    }else{
+        return root;
+    }
+}
+Node* searchIter(Node* root, int num){
+    if(root == NULL){
+        return NULL;
+    }
+    Node* it = root;
+    while(1){
+        if(num < it->val && it->left != NULL){
+            it = it->left;
+        }else if(num > it->val && it->right != NULL){
+            it = it->right;
+        }else if(num == it->val){
+            return it;
+        }
+        else{
+            return NULL;
+        }
+    }
+}
+Node* minimum(Node* root){
+    if(root == NULL){
+        return NULL;
+    }
+    Node* min = root;
+    while(min->left != NULL){ //can still traverse
+        min = root->left;
+    }
+    return min;
+}
+Node* maximum(Node* root){
+    if(root == NULL){
+        return NULL;
+    }
+    Node* max = root;
+    while(max->right != NULL){
+        max = max->right;
+    }
+    return max;
+}
 Node* insertNode(Node* root, int num){
     if(root == NULL){
         return createNode(num);
+    }
+    if(num < root->val){
+        root->left = insertNode(root->left, num);
     }else{
-        if(num < root->val){
-            root->left = insertNode(root->left, num);
-        }else{
-            root->right = insertNode(root->right, num);
-        }
+        root->right = insertNode(root->right, num);
     }
     return root;
 }
+
 void preOrder(Node* root){
-    if(root != NULL){
-        printf("%d ", root->val);
+    if(root == NULL){
+        return;
     }
-    if(root->left != NULL){
-        preOrder(root->left);
-    }
-    if(root->right != NULL){
-        preOrder(root->right);
-    }
+    printf("%d ", root->val);
+    preOrder(root->left);
+    preOrder(root->right);
 }
 
-void inOrder(Node* root)
-{
+void inOrder(Node* root){
     if (root == NULL) {
         return;
-    }else{
-        inOrder(root->left);
-        printf("%d ", root->val);
-        inOrder(root->right);
     }
+    inOrder(root->left);
+    printf("%d ", root->val);
+    inOrder(root->right);
 }
 
 void postOrder(Node* root){
@@ -57,7 +101,6 @@ void postOrder(Node* root){
     postOrder(root->left);
     postOrder(root->right);
     printf("%d ",root->val);
-
 }
 
 int main(){
@@ -76,5 +119,48 @@ int main(){
     printf("PostOrder: ");
     postOrder(root);
     printf("\n");
+    printf("Minimum: ");
+    Node* min = minimum(root);
+    if(min != NULL){
+        printf("%d",min->val);
+    }
+    printf("\n");
+    printf("Minimum: ");
+    Node* max = maximum(root);
+    if(max != NULL){
+        printf("%d",max->val);
+    }
+    printf("\n");
+    
+    printf("Search recursive (5): ");
+    Node* search5 = search(root, 5);
+    if(search5 == NULL){
+        printf("Not found!\n");
+    }else{
+        printf("Value of %d\n",search5->val);
+    }
+    printf("Search recursive (8): ");
+    Node* search8 = search(root, 8);
+    if(search8 == NULL){
+        printf("Not found!\n");
+    }else{
+        printf("Value of %d\n",search8->val);
+    }
+
+    printf("Search iterative (5): ");
+    Node* search5Iter = searchIter(root, 5);
+    if(search5Iter == NULL){
+        printf("Not found!\n");
+    }else{
+        printf("Value of %d\n",search5Iter->val);
+    }
+    printf("Search iterative (8): ");
+    Node* search8Iter = searchIter(root, 8);
+    if(search8Iter == NULL){
+        printf("Not found!\n");
+    }else{
+        printf("Value of %d\n",search8Iter->val);
+    }
+    free(root);
     return EXIT_SUCCESS;
 }
