@@ -64,6 +64,27 @@ Node* maximum(Node* root){
     }
     return max;
 }
+
+int checkHeightBalance(Node* root, int* height){
+    int leftHeight = 0;
+    int rightHeight = 0;
+    int l = 0;
+    int r = 0;
+    if(root == NULL){ //trivial solution
+        *height = 0;
+        return 1;
+    }
+    l = checkHeightBalance(root->left, &leftHeight);
+    r = checkHeightBalance(root->right, &rightHeight);
+    
+    *height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+    if((leftHeight - rightHeight) > 1 || (rightHeight - leftHeight) > 1){
+        return 0; //not balanced
+    }else{
+        return l && r; // if balanced
+    }
+}
+
 Node* insertNode(Node* root, int num){
     if(root == NULL){
         return createNode(num);
@@ -125,7 +146,7 @@ int main(){
         printf("%d",min->val);
     }
     printf("\n");
-    printf("Minimum: ");
+    printf("Maximum: ");
     Node* max = maximum(root);
     if(max != NULL){
         printf("%d",max->val);
@@ -161,6 +182,9 @@ int main(){
     }else{
         printf("Value of %d\n",search8Iter->val);
     }
+    printf("Balanced: ");
+    int height = 0;
+    printf("%d\n", checkHeightBalance(root, &height));
     free(root);
     return EXIT_SUCCESS;
 }
