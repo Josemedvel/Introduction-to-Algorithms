@@ -1,3 +1,4 @@
+import pdb
 class TreeNode:
     value = None
     left = None
@@ -45,6 +46,8 @@ class TreeNode:
             self.right.preOrder()
 
     def checkBalancedHeight(self, height=0):
+        pdb.set_trace()
+
         if self is None: #trivial solution
             return 0, True
         
