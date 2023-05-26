@@ -10,7 +10,6 @@ Node* createNode(int newValue){
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->value = newValue;
     newNode->next = NULL;
-    //printf("valor nuevo: %d\n", newValue);
     return newNode;
 }
 
@@ -84,6 +83,15 @@ int removeFirst(Node** head){
     free(oldHead);
     return result;
 }
+//TODO
+int removeAt(int index, Node* head){
+    return 0;
+}
+//TODO
+int contains(int value, Node* head){
+    return 0;
+}
+
 
 void printList(Node* head){
     if(head == NULL){
@@ -99,10 +107,59 @@ void printList(Node* head){
     printf("NULL\n");
 }
 
+Node* insertAt(int index, int newValue, Node* head){
+    if(index < 0){
+        printf("Non positive indexes are not valid\n");
+        return head;
+    }
+    if(index > getSize(head)){
+        printf("Indexes cannot go higher than the actual size\n");
+        return head;
+    }
+    if(head == NULL){
+        printf("List is empty\n");
+        return head;
+    }
+    if(index == 0){
+        return addFirst(head, newValue);
+    }
+    
+    Node* iterator = head;
+    for(size_t i = 0; i < index - 1; i++){
+        iterator = iterator->next;
+    }
+    Node* newNode = createNode(newValue);
+    newNode->next = iterator->next;
+    iterator->next = newNode;
+    return head;
+}
+
+int getValue(int index, Node* head){
+    if(index >= getSize(head)){
+        printf("Indexes cannot go higher than the actual size\n");
+        return -1;
+    }
+    if(head == NULL){
+        printf("List is empty\n");
+        return -1;
+    }
+    if(index == 0){
+        return head->value;
+    }
+
+    Node* iterator = head;
+    for(int i = 0; i < index; i++){
+        iterator = iterator->next;
+    }
+    return iterator->value;
+}
+
+
+
+
 int main(int argc, char* argv[]){
     Node* list = NULL;
     for(int i = 0; i < 5; i++){
-        //list = addFirst(list, i);
         list = addLast(list, i);
     }
     printf("Size of List: %d\n", getSize(list));
@@ -113,5 +170,18 @@ int main(int argc, char* argv[]){
     removeFirst(&list);
     printf("Size of List: %d\n", getSize(list));
     printList(list);
+    list = insertAt(0, 10, list);
+    printf("Size of List: %d\n", getSize(list));
+    printList(list);
+    list = insertAt(4, 20, list);
+    printf("Size of List: %d\n", getSize(list));
+    printList(list);
+    list = insertAt(2, 30, list);
+    printf("Size of List: %d\n", getSize(list));
+    printList(list);
+    printf("Element at 0: %d\n", getValue(0, list));
+    printf("Element at 3: %d\n", getValue(3, list));
+    printf("Element at 4: %d\n", getValue(4, list));
+    free(list);
     return EXIT_SUCCESS;
 }
