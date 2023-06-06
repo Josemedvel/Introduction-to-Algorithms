@@ -47,7 +47,15 @@ int addLast(LinkedList** list, int newValue){
 }
 //TODO
 int addFirst(LinkedList** list, int newValue){
-    return 0;
+    if((*list) == NULL){
+        printf("List is empty");
+        return -1;
+    }
+    Node* newNode = createNode(newValue);
+    newNode->next = (*list)->head;
+    (*list)->head = newNode;
+    (*list)->size++;
+    return newValue;
 }
 //TODO
 int insertAt(int index, int newValue, LinkedList** list){
@@ -55,7 +63,22 @@ int insertAt(int index, int newValue, LinkedList** list){
 }
 //TODO
 int getValue(int index, LinkedList** list){
-    return 0;
+    if((*list) == NULL){
+        printf("List is empty\n");
+        return -1;
+    }
+    if(index < 0 || index > (*list)->size){//probar con última posición
+        printf("Indexes cannot go higher than the actual size\n");
+        return -1;
+    }
+    if(index == 0){
+        return (*list)->head->value;
+    }
+    Node* iterator = (*list)->head;
+    for(int i = 0; i < index; i++){
+        iterator = iterator->next;
+    }
+    return iterator->value;
 }
 //TODO
 int contains(int value, LinkedList** list){
@@ -94,6 +117,9 @@ int main(){
     LinkedList* list = createLinkedList(); //empty list
     addLast(&list, 1);
     addLast(&list, 2);
+    addFirst(&list, 50);
     printList(&list);
+    printf("Size of list: %d\n", list->size);
+    printf("Element at 2: %d\n", getValue(2, &list));
     return EXIT_SUCCESS;
 }
