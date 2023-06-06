@@ -45,7 +45,7 @@ int addLast(LinkedList** list, int newValue){
         return newNode->value;
     }
 }
-//TODO
+
 int addFirst(LinkedList** list, int newValue){
     if((*list) == NULL){
         printf("List is empty");
@@ -57,47 +57,112 @@ int addFirst(LinkedList** list, int newValue){
     (*list)->size++;
     return newValue;
 }
-//TODO
+
 int insertAt(int index, int newValue, LinkedList** list){
-    return 0;
-}
-//TODO
-int getValue(int index, LinkedList** list){
     if((*list) == NULL){
-        printf("List is empty\n");
+        printf("List does not exist\n");
         return -1;
     }
-    if(index < 0 || index > (*list)->size){//probar con última posición
-        printf("Indexes cannot go higher than the actual size\n");
+    if(index < 0 || index > (*list)->size){
+        printf("Indexes cannot go higher than the actual size nor below zero\n");
         return -1;
     }
     if(index == 0){
-        return (*list)->head->value;
+        return addFirst(list, newValue);
     }
     Node* iterator = (*list)->head;
+    Node* prev = NULL;
     for(int i = 0; i < index; i++){
+        prev = iterator;
         iterator = iterator->next;
     }
-    return iterator->value;
+    Node* newNode = createNode(newValue);
+    newNode->next = iterator;
+    prev->next = newNode;
+    (*list)->size++;
+    return newValue;
 }
-//TODO
+
+int getValue(int index, LinkedList** list){
+    return 0;
+}
+
 int contains(int value, LinkedList** list){
+    if((*list) == NULL){
+        printf("List does not exist\n");
+        return -1;
+    }
+    if((*list)->size == 0){
+        printf("List is empty\n");
+        return -1;
+    }
+    Node* iterator = (*list)->head;
+    do{
+        if(iterator->value == value){
+            return 1;
+        }
+        iterator = iterator->next;
+    }while(iterator != NULL);
     return 0;
 }
-//TODO
+
 int removeFirst(LinkedList** list){
-    return 0;
+    if((*list) == NULL){
+        printf("List does not exist\n");
+        return -1;
+    }
+    Node* oldNode = (*list)->head;
+    int result = (*list)->head->value;
+    (*list)->head = oldNode->next;
+    oldNode->next = NULL;
+    free(oldNode);
+    (*list)->size--;
+    return result;
 }
-//TODO
+
 int removeLast(LinkedList** list){
-    return 0;
+    if((*list) == NULL){
+        printf("List does not exist\n");
+        return -1;
+    }
+    Node* oldNode = (*list)->head;
+    Node* prev = NULL;
+    while(oldNode->next != NULL){
+        prev = oldNode;
+        oldNode = oldNode->next;
+    }
+    prev->next = NULL;
+    int result = oldNode->value;
+    free(oldNode);
+    (*list)->size--;
+    return result;
 }
-//TODO
+
 int removeAt(int index, LinkedList** list){
-    return 0;
+    if((*list) == NULL){
+        printf("List does not exist\n");
+        return -1;
+    }
+    if(index < 0 || index > (*list)->size){
+        printf("Indexes cannot go higher than the actual size nor below zero\n");
+        return -1;
+    }
+    if(index == 0){
+        return removeFirst(list);
+    }
+    Node* iterator = (*list)->head;
+    Node* prev = NULL;
+    for(int i = 0; i < index; i++){
+        prev = iterator;
+        iterator = iterator->next;
+    }
+    prev->next = iterator->next;
+    iterator->next = NULL;
+    int result = iterator->value;
+    free(iterator);
+    (*list)->size--;
+    return result;
 }
-
-
 
 void printList(LinkedList** list){
     if((*list) == NULL){
@@ -117,9 +182,6 @@ int main(){
     LinkedList* list = createLinkedList(); //empty list
     addLast(&list, 1);
     addLast(&list, 2);
-    addFirst(&list, 50);
     printList(&list);
-    printf("Size of list: %d\n", list->size);
-    printf("Element at 2: %d\n", getValue(2, &list));
     return EXIT_SUCCESS;
 }

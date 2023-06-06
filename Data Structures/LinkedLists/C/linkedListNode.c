@@ -83,12 +83,44 @@ int removeFirst(Node** head){
     free(oldHead);
     return result;
 }
-//TODO
-int removeAt(int index, Node* head){
-    return 0;
+
+int removeAt(int index, Node** head){
+    if((*head) == NULL){
+        printf("List is empty\n");
+        return -1;
+    }
+    if(index < 0 || index >= getSize(*head)){
+        printf("Indexes cannot go higher than the actual size nor below zero\n");
+        return -1;
+    }
+    if(index == 0){
+        return removeFirst(head);
+    }
+    Node* iterator = *head;
+    Node* prev = NULL;
+    for(int i = 0; i < index; i++){
+        prev = iterator;
+        iterator = iterator->next;
+    }
+    int result = iterator->value;
+    prev->next = iterator->next;
+    iterator->next = NULL;
+    free(iterator);
+    return result;
 }
-//TODO
+
 int contains(int value, Node* head){
+    if(head == NULL){
+        printf("List is empty\n");
+        return -1;
+    }
+    Node* iterator = head;
+    do{
+        if(iterator->value == value){
+            return 1;
+        }
+        iterator = iterator->next;
+    }while(iterator != NULL);
     return 0;
 }
 
@@ -108,12 +140,8 @@ void printList(Node* head){
 }
 
 Node* insertAt(int index, int newValue, Node* head){
-    if(index < 0){
-        printf("Non positive indexes are not valid\n");
-        return head;
-    }
-    if(index > getSize(head)){
-        printf("Indexes cannot go higher than the actual size\n");
+    if(index < 0 || index > getSize(head)){
+        printf("Indexes cannot go higher than the actual size nor below zero\n");
         return head;
     }
     if(head == NULL){
@@ -136,26 +164,19 @@ Node* insertAt(int index, int newValue, Node* head){
 
 int getValue(int index, Node* head){
     if(index >= getSize(head)){
-        printf("Indexes cannot go higher than the actual size\n");
+        printf("Indexes cannot go higher than the actual size nor below zero\n");
         return -1;
     }
     if(head == NULL){
         printf("List is empty\n");
         return -1;
     }
-    if(index == 0){
-        return head->value;
-    }
-
     Node* iterator = head;
     for(int i = 0; i < index; i++){
         iterator = iterator->next;
     }
     return iterator->value;
 }
-
-
-
 
 int main(int argc, char* argv[]){
     Node* list = NULL;
@@ -182,6 +203,16 @@ int main(int argc, char* argv[]){
     printf("Element at 0: %d\n", getValue(0, list));
     printf("Element at 3: %d\n", getValue(3, list));
     printf("Element at 4: %d\n", getValue(4, list));
+    printList(list);
+    printf("Remove item at 0: ");
+    removeAt(0, &list);
+    printList(list);
+    printf("Remove item at 5: ");
+    removeAt(4, &list);
+    printList(list);
+    printf("Remove item at 2: ");
+    removeAt(2, &list);
+    printList(list);
     free(list);
     return EXIT_SUCCESS;
 }
